@@ -20,7 +20,7 @@ class FluxRolePermission
             return $next($request);
         }
 
-        if ($request->user()->hasPermission($permission)) {
+        if (!$request->user()->hasPermission($permission)) {
             return response(['error' => 'Permissões insuficientes.'], Response::HTTP_UNAUTHORIZED);
         }
 
