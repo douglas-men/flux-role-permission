@@ -17,6 +17,20 @@ class PermissionRepository {
         });
     }
 
+    public static function getOne($slug)
+    {
+        return Permission::select('id', 'name', 'slug')
+        ->whereSlug($slug)
+        ->get()
+        ->transform(function ($item) {
+            return [
+                'id'   => $item->id,
+                'name' => $item->name,
+                'slug' => $item->slug
+            ];
+        });
+    }
+
     public static function store($slug)
     {
         $name = '';

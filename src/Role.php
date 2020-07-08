@@ -57,11 +57,27 @@ class Role {
     }
 
     /**
+     * Retorna uma role registrada no banco
+     */
+    public static function get($slug)
+    {
+        return RoleRepository::getOne($slug);
+    }
+
+    /**
      * Cria uma nova role no banco
      */
     public static function create($slug, $permissions = null)
     {
         return RoleRepository::store($slug, $permissions);
+    }
+
+    /**
+     * Atualiza uma role no banco
+     */
+    public static function update($slug, $data)
+    {
+        return RoleRepository::update($slug, $data);
     }
 
     /**

@@ -68,6 +68,19 @@ Class used to List, Register, Verify and Revoke permissions.
     ]
 ```
 
+* **List a Permission**
+```php
+    // Get the Permission
+    Permission::get('list-users');
+
+    // Return (array):    
+    [
+        "id" => 3
+        "name" => "List Users"
+        "slug" => "list-users"
+    ]
+```
+
 * **Create a Permission**
 ```php
     // Creating a new Permission
@@ -224,6 +237,38 @@ Class used to List, Register, Verify and Revoke roles.
     ]
 ```
 
+* **List a Role**
+```php
+    // Get the role
+    Role::get('users');
+
+    // Return (array):
+    [
+        "id" => 5
+        "name" => "Users"
+        "slug" => "users"
+        "permissions" => {
+            [
+                0 => array:3 [
+                    "id" => 3
+                    "name" => "List Users"
+                    "slug" => "list-users"
+                ],
+                1 => array:3 [
+                    "id" => 4
+                    "name" => "Delete Users"
+                    "slug" => "delete-users"
+                ],
+                2 => array:3 [
+                    "id" => 5
+                    "name" => "Create Users"
+                    "slug" => "create-users"
+                ]
+            ]
+        }
+    ]
+```
+
 * **Create a Role**
 ```php
     // Creating a new Role
@@ -232,8 +277,37 @@ Class used to List, Register, Verify and Revoke roles.
     // Creating a new Role with permissions
     Role::create('financeiro', ['listar-contas', 'cadastrar-contas', 'excluir-contas']);
 
-    // Return (boolean): 
-    true or false    
+    // Return (array): 
+    [
+        "id": 7,
+        "name": "Companies",
+        "slug": "companies"
+    ]  
+```
+
+* **Update a Role**
+```php
+    // Updating a Role
+    Role::update('financeiro', ['slug' => 'users', 'permissions' => ['list-users', 'create-users']]);
+
+    // Return (array): 
+    [
+        "id" => 4
+        "name" => "Usuarios Editado"
+        "slug" => "usuarios-editado"
+        "permissions" => {
+            [
+                "id" => 7
+                "name" => "List Users"
+                "slug" => "list-users"
+            ],
+            [
+                "id" => 7
+                "name" => "Create Users"
+                "slug" => "create-users"
+            ]
+        }
+    ]
 ```
 
 * **Add Permission to a Role**

@@ -32,6 +32,33 @@ class RoleRepository {
         });
     }
 
+    public static function getOne($slug)
+    {
+        return Role::whereSlug($slug)
+        ->with('permissions')
+        ->select('id', 'name', 'slug')
+        ->get()
+        ->transform(function ($item) {
+            $retorno = [
+                'id'    => $item->id,
+                'name'  => $item->name,
+                'slug'  => $item->slug
+            ];
+
+            if (!empty($item->permissions) && count($item->permissions) > 0) {
+                $retorno += ['permissions' => $item->permissions->transform(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'name' => $item->name,
+                        'slug' => $item->slug
+                    ];
+                })];
+            }
+
+            return $retorno;
+        })->first();
+    }
+
     public static function store($slug, $permissions = null)
     {
         $name = '';
@@ -52,7 +79,67 @@ class RoleRepository {
             self::vincularPermissoes($role->id, $permissions);
         }
 
-        return $role->save();
+        return $role;
+    }
+
+    public static function update($slug, $data)
+    {
+        $query = Role::select('id', 'slug')->whereSlug($slug);
+
+        if ($query->exists()) {
+
+            $name = '';
+            $exploded_slug = explode('-', $slug);
+
+            foreach ($exploded_slug as $index => $string) {
+                $name .= ucfirst($string);
+
+                if (isset($exploded_slug[$index+1])) {
+                    $name .= ' ';
+                }
+            }
+
+            $role = $query->first();
+
+            $role->update([
+                'name' => $name,
+                'slug' => $data['slug']
+            ]);
+
+            if (isset($data['permissions']) && !empty($data['permissions'])) {
+
+                PermissionRole::whereRoleId($role->id)->delete();
+
+                foreach ($data['permissions'] as $permission) {
+                    $query = Permission::select('id', 'slug')->whereSlug($permission);
+
+                    if ($query->exists()) {
+                        PermissionRole::create([
+                            'permission_id' => $query->first()->id,
+                            'role_id'       => $role->id
+                        ]);
+                    }
+                }
+            }
+
+            $retorno = [
+                'id'          => $role->id,
+                'name'        => $role->name,
+                'slug'        => $role->slug
+            ];
+
+            if (isset($role->permissions) && !empty($role->permissions)) {
+                $retorno += ['permissions' => $role->permissions->transform(function ($item) {
+                    return [
+                        'id'   => $item->id,
+                        'name' => $item->name,
+                        'slug' => $item->slug
+                    ];
+                })];
+            }
+
+            return $retorno;
+        }
     }
 
     public static function delete($slug)

@@ -57,6 +57,14 @@ class Permission {
     }
 
     /**
+     * Retorna uma permissão registrada no banco
+     */
+    public static function get($slug)
+    {
+        return PermissionRepository::getOne($slug);
+    }
+
+    /**
      * Cria uma nova permissão no banco
      */
     public static function create($slug)
