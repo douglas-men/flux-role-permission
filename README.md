@@ -53,17 +53,16 @@ Class used to List, Register, Verify and Revoke permissions.
     Permission::all();
 
     // Return (array):
-
     [
         [
             "id" => 3
-            "name" => "Listar Empresas"
-            "slug" => "listar-empresas"
+            "name" => "List Companies"
+            "slug" => "list-companies"
         ],
         [
             "id" => 4
-            "name" => "Excluir Empresas"
-            "slug" => "excluir-empresas"
+            "name" => "Delete Companies"
+            "slug" => "delete-companies"
         ]
     ]
 ```
@@ -84,7 +83,7 @@ Class used to List, Register, Verify and Revoke permissions.
 * **Create a Permission**
 ```php
     // Creating a new Permission
-    Permission::create('cadastrar-empresas');
+    Permission::create('create-companies');
 
     // Return (boolean): 
     true or false    
@@ -93,7 +92,7 @@ Class used to List, Register, Verify and Revoke permissions.
 * **Delete a Permission**
 ```php
     // Deleting a Permission
-    Permission::delete('listar-empresas');
+    Permission::delete('list-companies');
 
     // Return (boolean): 
     true or false
@@ -108,18 +107,18 @@ Class used to List, Register, Verify and Revoke permissions.
     [
         [
             "id" => 3
-            "name" => "Listar Empresas"
-            "slug" => "listar-empresas"
+            "name" => "List Companies"
+            "slug" => "list-companies"
         ],
         [
             "id" => 4
-            "name" => "Excluir Empresas"
-            "slug" => "excluir-empresas"
+            "name" => "Delete Companies"
+            "slug" => "delete-companies"
         ],
         [
             "id" => 5
-            "name" => "Cadastrar Empresas"
-            "slug" => "cadastrar-empresas"
+            "name" => "Create Company"
+            "slug" => "create-companies"
         ]
     ]
     
@@ -128,7 +127,7 @@ Class used to List, Register, Verify and Revoke permissions.
 * **Checks a User’s Permission**
 ```php    
     // Checking if the user has permission
-    Permission::has(auth()->user(), 'listar-empresas');
+    Permission::has(auth()->user(), 'list-companies');
     
     // Return (boolean): 
     true or false
@@ -137,7 +136,7 @@ Class used to List, Register, Verify and Revoke permissions.
 * **Records permission to an User**
 ```php    
     // Grants permission for the User
-    Permission::register(auth()->user(), 'listar-empresas');
+    Permission::register(auth()->user(), 'list-companies');
     
     // Return (boolean): 
     true or false
@@ -146,7 +145,7 @@ Class used to List, Register, Verify and Revoke permissions.
 * **Revokes a permission**
 ```php    
     // Revokes permission
-    Permission::revoke(auth()->user(), 'listar-empresas');
+    Permission::revoke(auth()->user(), 'list-companies');
 
     // Return (boolean): 
     true or false
@@ -167,18 +166,18 @@ It is possible to List, Register, Verify and Revoke permissions using the User c
     [
         [
             "id" => 3
-            "name" => "Listar Empresas"
-            "slug" => "listar-empresas"
+            "name" => "List Companies"
+            "slug" => "list-companies"
         ],
         [
             "id" => 4
-            "name" => "Excluir Empresas"
-            "slug" => "excluir-empresas"
+            "name" => "Delete Companies"
+            "slug" => "delete-companies"
         ],
         [
             "id" => 5
-            "name" => "Cadastrar Empresas"
-            "slug" => "cadastrar-empresas"
+            "name" => "Create Company"
+            "slug" => "create-companies"
         ]
     ]
 ```
@@ -187,7 +186,7 @@ It is possible to List, Register, Verify and Revoke permissions using the User c
     $user = User::find(1);
     
     // Checking if the user has permission
-    $user->hasPermission('listar-empresas');
+    $user->hasPermission('list-companies');
     
     // Return (boolean):
     true or false
@@ -197,7 +196,7 @@ It is possible to List, Register, Verify and Revoke permissions using the User c
     $user = User::find(1);
     
     // Grants permission to the User
-    $user->registerPermission('listar-empresas');
+    $user->registerPermission('list-companies');
     
     // Return (boolean):
     true or false
@@ -208,7 +207,7 @@ It is possible to List, Register, Verify and Revoke permissions using the User c
     $user = User::find(1);
     
     // Revokes permission
-    $user->revokePermission('listar-empresas');
+    $user->revokePermission('list-companies');
 
     // Return (boolean):
     true or false    
@@ -226,13 +225,13 @@ Class used to List, Register, Verify and Revoke roles.
     [
         [
             "id" => 3
-            "name" => "Empresas"
-            "slug" => "empresas"
+            "name" => "Companies"
+            "slug" => "companies"
         ],
         [
             "id" => 4
-            "name" => "Usuarios"
-            "slug" => "usuarios"
+            "name" => "Users"
+            "slug" => "users"
         ]
     ]
 ```
@@ -272,29 +271,29 @@ Class used to List, Register, Verify and Revoke roles.
 * **Create a Role**
 ```php
     // Creating a new Role
-    Role::create('financeiro');
+    Role::create('Users');
 
     // Creating a new Role with permissions
-    Role::create('financeiro', ['listar-contas', 'cadastrar-contas', 'excluir-contas']);
+    Role::create('users', ['list-users', 'create-users', 'delete-users']);
 
     // Return (array): 
     [
         "id": 7,
-        "name": "Companies",
-        "slug": "companies"
+        "name": "Users",
+        "slug": "users"
     ]  
 ```
 
 * **Update a Role**
 ```php
     // Updating a Role
-    Role::update('financeiro', ['slug' => 'users', 'permissions' => ['list-users', 'create-users']]);
+    Role::update('users', ['slug' => 'new-slug', 'permissions' => ['list-users', 'create-users']]);
 
     // Return (array): 
     [
         "id" => 4
-        "name" => "Usuarios Editado"
-        "slug" => "usuarios-editado"
+        "name" => "New Slug"
+        "slug" => "new-slug"
         "permissions" => {
             [
                 "id" => 7
@@ -302,7 +301,7 @@ Class used to List, Register, Verify and Revoke roles.
                 "slug" => "list-users"
             ],
             [
-                "id" => 7
+                "id" => 8
                 "name" => "Create Users"
                 "slug" => "create-users"
             ]
@@ -313,7 +312,7 @@ Class used to List, Register, Verify and Revoke roles.
 * **Add Permission to a Role**
 ```php
     // Deleting a Role
-    Role::addPermission('financeiro', 'listar-contas');
+    Role::addPermission('sales', 'list-sales');
 
     // Return (boolean): 
     true or false
@@ -322,7 +321,7 @@ Class used to List, Register, Verify and Revoke roles.
 * **Remove Permission from a Role**
 ```php
     // Deleting a Role
-    Role::removePermission('financeiro', 'listar-contas');
+    Role::removePermission('sales', 'list-sales');
 
     // Return (boolean): 
     true or false
@@ -331,7 +330,7 @@ Class used to List, Register, Verify and Revoke roles.
 * **Delete a Role**
 ```php
     // Deleting a Role
-    Role::delete('listar-empresas');
+    Role::delete('sales');
 
     // Return (boolean): 
     true or false
@@ -346,13 +345,13 @@ Class used to List, Register, Verify and Revoke roles.
     [
         [
             "id" => 3
-            "name" => "Empresas"
-            "slug" => "empresas"
+            "name" => "Companies"
+            "slug" => "companies"
         ],
         [
             "id" => 4
-            "name" => "Financeiro"
-            "slug" => "financeiro"
+            "name" => "Sales"
+            "slug" => "sales"
         ]
     ]
     
@@ -361,7 +360,7 @@ Class used to List, Register, Verify and Revoke roles.
 * **Checks a User’s Role**
 ```php    
     // Checking if the user has role
-    Role::has(auth()->user(), 'empresas');
+    Role::has(auth()->user(), 'companies');
     
     // Return (boolean): 
     true or false
@@ -370,7 +369,7 @@ Class used to List, Register, Verify and Revoke roles.
 * **Records Role to an User**
 ```php    
     // Grants role for the User
-    Role::register(auth()->user(), 'empresas');
+    Role::register(auth()->user(), 'companies');
     
     // Return (boolean): 
     true or false
@@ -379,7 +378,7 @@ Class used to List, Register, Verify and Revoke roles.
 * **Revokes a Role**
 ```php    
     // Revokes role
-    Role::revoke(auth()->user(), 'empresas');
+    Role::revoke(auth()->user(), 'companies');
 
     // Return (boolean): 
     true or false    
@@ -399,13 +398,13 @@ It is possible to List, Register, Verify and Revoke roles using the User class.
     [
         [
             "id" => 3
-            "name" => "Empresas"
-            "slug" => "empresas"
+            "name" => "Companies"
+            "slug" => "companies"
         ],
         [
             "id" => 4
-            "name" => "Financeiro"
-            "slug" => "financeiro"
+            "name" => "Sales"
+            "slug" => "sales"
         ]
     ]
 ```
@@ -414,7 +413,7 @@ It is possible to List, Register, Verify and Revoke roles using the User class.
     $user = User::find(1);
     
     // Checking if the user has role
-    $user->hasRole('empresas');
+    $user->hasRole('companies');
     
     // Return (boolean):
     true or false
@@ -424,7 +423,7 @@ It is possible to List, Register, Verify and Revoke roles using the User class.
     $user = User::find(1);
     
     // Grants role to the User
-    $user->registerRole('empresas');
+    $user->registerRole('companies');
     
     // Return (boolean):
     true or false
@@ -435,7 +434,7 @@ It is possible to List, Register, Verify and Revoke roles using the User class.
     $user = User::find(1);
     
     // Revokes role
-    $user->revokeRole('empresas');
+    $user->revokeRole('companies');
 
     // Return (boolean):
     true or false    
