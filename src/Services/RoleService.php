@@ -22,33 +22,48 @@ class RoleService {
      */
     public function listRoles()
     {
-        return RoleUser::with('role')
-        ->whereUserId($this->user->id)
-        ->get()
-        ->transform(function ($item) {
-            if (!empty($item->role)) {
+        if (AdminService::checkIfIsAdmin($this->user)) {
+            $response = Role::get()->transform(function ($item) {
                 return [
-                    'id'   => $item->role->id,
-                    'name' => $item->role->name,
-                    'slug' => $item->role->slug
+                    'id'   => $item->id,
+                    'name' => $item->name,
+                    'slug' => $item->slug
                 ];
-            }
-        });
+            });
+        } else {
+            $response = RoleUser::with('role')
+                ->whereUserId($this->user->id)
+                ->get()
+                ->transform(function ($item) {
+                    if (!empty($item->role)) {
+                        return [
+                            'id'   => $item->role->id,
+                            'name' => $item->role->name,
+                            'slug' => $item->role->slug
+                        ];
+                    }
+                });
+        }
+
+        return $response;
     }
 
     /**
      * Checa role
      */
     public function checkIfHasRole()
-    {
-        $has_role = false;
-        $query = Role::select('id', 'slug')->whereSlug($this->role);
+    {   
+        $has_role = AdminService::checkIfIsAdmin($this->user);
 
-        if ($query->exists()) {
-            $has_role = RoleUser::whereUserId($this->user->id)
-                ->whereRoleId($query->first()->id)
-                ->exists();
-        }
+        if (!$has_role) {
+            $query = Role::select('id', 'slug')->whereSlug($this->role);
+
+            if ($query->exists()) {
+                $has_role = RoleUser::whereUserId($this->user->id)
+                    ->whereRoleId($query->first()->id)
+                    ->exists();
+            }
+        }        
 
         return $has_role;
     }

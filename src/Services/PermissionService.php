@@ -4,6 +4,8 @@ namespace Doc88\FluxRolePermission\Services;
 
 use Doc88\FluxRolePermission\Models\Permission;
 use Doc88\FluxRolePermission\Models\PermissionUser;
+use Doc88\FluxRolePermission\Models\Role;
+use Doc88\FluxRolePermission\Models\RoleUser;
 
 class PermissionService {
 
@@ -20,10 +22,19 @@ class PermissionService {
      * Lista as permissões
      */
     public function listPermissions()
-    {
-        return PermissionUser::with(['permission' => function ($query) {
-            $query->select('id', 'name', 'slug');
-        }])
+    {   
+        if (AdminService::checkIfIsAdmin($this->user)) {
+            $response = Permission::get()->transform(function ($item) {
+                return [
+                    'id'   => $item->id,
+                    'name' => $item->name,
+                    'slug' => $item->slug
+                ];
+            });
+        } else {
+            $response = PermissionUser::with(['permission' => function ($query) {
+                $query->select('id', 'name', 'slug');
+            }])
             ->whereUserId($this->user->id)
             ->get(['id', 'user_id', 'permission_id'])
             ->transform(function ($item) {
@@ -35,6 +46,9 @@ class PermissionService {
                     ];
                 }
             });
+        }
+
+        return $response;
     }
 
     /**
@@ -42,13 +56,16 @@ class PermissionService {
      */
     public function checkIfHasPermission()
     {
-        $has_permission = false;
-        $query = Permission::select('id', 'slug')->whereSlug($this->permission);
+        $has_permission = AdminService::checkIfIsAdmin($this->user);
 
-        if ($query->exists()) {
-            $has_permission = PermissionUser::whereUserId($this->user->id)
-                ->wherePermissionId($query->first()->id)
-                ->exists();
+        if (!$has_permission) {
+            $query = Permission::select('id', 'slug')->whereSlug($this->permission);
+
+            if ($query->exists()) {
+                $has_permission = PermissionUser::whereUserId($this->user->id)
+                    ->wherePermissionId($query->first()->id)
+                    ->exists();
+            }
         }
 
         return $has_permission;
